@@ -1,0 +1,73 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+/* .layout{
+    -fx-background-color: green;
+} */
+
+/* .empty1,.empty2,.empty3,.empty4{
+    -fx-background-color: red;
+} */
+
+
+
+.username-label,
+.password-label {
+    -fx-text-fill: white;
+}
+
+.username-textfield,
+.password-textfield {
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    /* removes color when selected */
+    -fx-background-color: rgb(255, 157, 222);
+    -fx-background-insets: 2 0 2 0;
+    -fx-font-size: 20;
+}
+
+.username-textfield {
+    /* -fx-padding: 0 50; */
+}
+
+.changeProfPicButton,
+.myWorkoutsButton{
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+}
+
+.changeProfPicButton {
+    -fx-background-color: rgb(194, 45, 120);
+    -fx-text-fill: white;
+    -fx-padding: 10 40;
+}
+
+.myWorkoutsButton {
+    -fx-background-color: rgb(255, 189, 246);
+    -fx-padding: 10 30;
+}
+
+.settingsButton,
+.logoutButton {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+
+    -fx-text-fill: white;
+    /* -fx-padding: 10 40; */
+}
+
+.settingsButton {
+    -fx-background-color: rgb(66, 15, 41);
+    -fx-border-color: white;
+}
+.logoutButton {
+    -fx-background-color: rgb(93, 93, 93);
+}
+
+.greetingsLabel{
+    -fx-text-fill:white;
+    -fx-font-size: 15;
+}

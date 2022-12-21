@@ -1,0 +1,20 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.usernameLabel,
+.fNameLabel,
+.lNameLabel,
+.emailLabel {
+    -fx-text-fill: white;
+}
+
+.saveButton{
+    -fx-background-color: rgb(66, 15, 41);
+    -fx-border-color: white;
+    -fx-font-size: 20;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-text-fill: white;
+    -fx-padding: 10 30;
+}

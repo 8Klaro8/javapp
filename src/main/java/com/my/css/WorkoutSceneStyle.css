@@ -1,0 +1,57 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.backButton,
+.addWorkoutButton,
+.removeWorkoutButton {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-text-fill: white;
+}
+
+.backButton {
+    -fx-background-color: rgb(93, 93, 93);
+}
+
+.addWorkoutButton,
+.removeWorkoutButton {
+    
+    -fx-border-color: white;
+}
+
+.addWorkoutButton {
+    -fx-background-color: rgb(107, 27, 67);
+}
+
+.removeWorkoutButton {
+    -fx-background-color: rgb(49, 9, 18);
+}
+
+/* // Scrollpanel */
+.workoutPanel .viewport {
+    -fx-background-color: rgb(53, 53, 53); /*or whatever you want*/
+  }
+
+.workoutPanel {
+    -fx-background-insets: 50;
+    -fx-padding: 15;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color :rgb(53, 53, 53);
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+   -fx-shape : " ";    
+   -fx-padding :0.0 0.30em;
+}
+
+.kcalDay,
+.kcalDayNum,
+.kcalWeek,
+.kcalWeekNum {
+    -fx-text-fill:white;
+}

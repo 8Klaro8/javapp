@@ -1,0 +1,38 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+/* .emptyTop,
+.emptyBottom,
+.emptyLeft,
+.emptyRight {
+    -fx-background-color: red;
+} */
+
+.usernameLabel,
+.passwordLabel,
+.repPasswordLabel,
+.heightLabel,
+.weightLabel,
+.checkBoxLabel {
+    -fx-text-fill: white;
+}
+
+
+.registerButton {
+    -fx-font-size: 20;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-background-color: rgb(255, 189, 246);
+    -fx-padding: 10 30;
+}
+
+.backToLoginButton {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-background-color: rgb(66, 15, 41);
+    -fx-padding: 5 20;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+}

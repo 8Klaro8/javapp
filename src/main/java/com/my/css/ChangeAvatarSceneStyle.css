@@ -1,0 +1,23 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+
+.scrollPane .viewport {
+    -fx-background-color: rgb(53, 53, 53); /*or whatever you want*/
+  }
+
+.scrollPane {
+    -fx-background-insets: 50;
+    -fx-padding: 15;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color :transparent;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+   -fx-shape : " ";    
+   -fx-padding :0.0 0.15em;
+}

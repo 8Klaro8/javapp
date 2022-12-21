@@ -1,0 +1,14 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+.messagleLabel {
+    -fx-text-fill: white;
+}
+.closeButton {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-background-color: rgb(78, 6, 30);
+    -fx-text-fill: white;
+    -fx-border-color: red;
+}

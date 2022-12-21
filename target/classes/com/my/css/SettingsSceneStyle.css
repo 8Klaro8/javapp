@@ -1,0 +1,35 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.changeDetailsButton,
+.backButton {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+
+    -fx-text-fill: white;
+}
+
+.changeDetailsButton {
+    -fx-background-color: rgb(66, 15, 41);
+    -fx-border-color: white;
+}
+
+.backButton {
+    -fx-background-color: rgb(93, 93, 93);
+}
+
+.usernameLabel,
+.fNameLabel,
+.lNameLabel,
+.emailLabel,
+.usernameField,
+.fNameField,
+.lNameField,
+.emailField {
+    -fx-text-fill: white;
+}
+
+
+

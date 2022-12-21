@@ -1,0 +1,62 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.workoutTitle,
+.workoutType,
+.workoutDuration,
+.workoutIcon {
+    -fx-text-fill: white;
+    -fx-font-size:15;
+}
+
+.choice-box {
+    -fx-font-size: 12;
+    -fx-padding: 6;
+    -fx-border-color: rgb(162, 39, 187);
+    -fx-border-width: 3;
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.choice-box .label {
+    -fx-text-fill: white; 
+}
+
+.choice-box .context-menu {
+    -fx-background-color: black;
+    -fx-popup-menu-popup-align: bottom-left;
+}
+
+.choice-box .arrow {
+    -fx-background-color: white;
+}
+
+.choice-box .menu-item:focused { -fx-background-color: rgb(147, 76, 161); }
+.choice-box .menu-item > .label { -fx-text-fill: white; }
+.choice-box .menu-item:focused > .label { -fx-text-fill: black; }
+
+.choice-box .menu {
+    -fx-popup-menu-popup-align: bottom-left;
+}
+
+.addButton,
+.backButton {
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-font-size: 15;
+}
+.addButton {
+
+    -fx-text-fill: white;
+    -fx-background-color: rgb(107, 27, 67);
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-color: rgb(245, 167, 232);
+}
+
+.backButton {
+    -fx-background-color: rgb(93, 93, 93);
+    -fx-text-fill: white;
+}
