@@ -202,10 +202,10 @@ public class App extends Application {
         // temp.
         // ChangeAvatarScene changeAvatarScene = new ChangeAvatarScene();
         // SettingsScene settingsScene = new SettingsScene();
-        // WokroutsScene wkScene = new WokroutsScene();
+        WokroutsScene wkScene = new WokroutsScene();
 
-        // window.setScene(wkScene.getWorkoutScene(stage));
-        window.setScene(loginScene);
+        window.setScene(wkScene.getWorkoutScene(stage));
+        // window.setScene(loginScene);
         window.show();
 
     }

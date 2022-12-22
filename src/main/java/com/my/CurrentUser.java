@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class CurrentUser {
-    private static final String USER_FILE_PATH = "src/main/java/com/my/current_user/current_user.txt";
+    private static final String USER_FILE_PATH = "javapp/src/main/java/com/my/current_user/current_user.txt";
     
 
     public static String get_current_user() throws IOException {

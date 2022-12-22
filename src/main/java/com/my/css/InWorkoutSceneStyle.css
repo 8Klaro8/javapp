@@ -1,0 +1,13 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.title,
+.type,
+.burnedCal,
+.duration,
+.burnedCalNum,
+.durationNum {
+    -fx-text-fill: white;
+}
+

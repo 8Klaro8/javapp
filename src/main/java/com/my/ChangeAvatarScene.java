@@ -28,7 +28,7 @@ public class ChangeAvatarScene {
     private static Scene changeAvatarScene;
     private static ScrollPane scrollPane;
     private static GridPane scrollContainer;
-    private static final String DIRECTORY_PATH = "src/main/resources/com/my/assets";
+    private static final String DIRECTORY_PATH = "javapp/src/main/resources/com/my/assets";
     private static Pane emptyPane, emptyPane2, emptyPane3, emptyPane4;
     private static Stage window;
     private static Scene loginScene;

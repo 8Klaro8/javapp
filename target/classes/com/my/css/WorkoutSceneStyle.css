@@ -55,3 +55,14 @@
 .kcalWeekNum {
     -fx-text-fill:white;
 }
+
+.label {
+    -fx-background-color: rgb(70, 70, 70);
+    -fx-text-fill: white; -fx-background-radius: 5;
+    transition: background-color 1s linear;
+    -fx-cursor: pointer;
+}
+
+.label:hover {
+    -fx-background-color: rgb(80, 80, 80);
+}

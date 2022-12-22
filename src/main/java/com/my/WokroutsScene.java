@@ -4,7 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -18,6 +25,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class WokroutsScene {
@@ -31,9 +40,10 @@ public class WokroutsScene {
     private static HBox topMenuBar;
     private static VBox centerPanel, scrollBox;
     private static ScrollPane workoutPanel;
-    private static Pane gapPane;
+    private static Pane gapPane, gapPaneRight;
     private static ConnectToDB db = new ConnectToDB();
     private static Connection conn = db.connect_to_db("accounts", "postgres", System.getenv("PASSWORD"));
+    private static float allCalorieBurnedLastWeek, allCalorieBurnedToday;
 
     public Scene getWorkoutScene(Stage window) throws IOException {
 
@@ -65,14 +75,26 @@ public class WokroutsScene {
         // init labels
         caloriesBurnedWeek = new Label("Calories burned last week");
         caloriesBurnedDay = new Label("Calories burned today");
-        caloriesBurnedWeekNum = new Label("TEMP");
-        caloriesBurnedDayNum = new Label("TEMP");
+        caloriesBurnedWeekNum = new Label();
+        caloriesBurnedDayNum = new Label();
+
+        // get todays calorie
+        get_todays_calorie();
+
+        // get last weeks calorie
+        get_last_week_calorie();
+
+        // set calories label
+        setCaloriesBurnedTodayText();
+        setCaloriesBurnedText();
 
         // init pane
         gapPane = new Pane();
+        gapPaneRight = new Pane();
 
         // set pane
         gapPane.setPrefSize(20, 20);
+        gapPaneRight.setPrefSize(20, 0);
 
         // init. HBox
         topMenuBar = new HBox();
@@ -86,7 +108,7 @@ public class WokroutsScene {
 
         // set 'workoutPanel'
         workoutPanel.setMinViewportWidth(100);
-        workoutPanel.setMaxWidth(200);
+        workoutPanel.setMaxWidth(210);
         workoutPanel.setFitToWidth(true);
 
         // add to 'scrollBox'
@@ -101,11 +123,18 @@ public class WokroutsScene {
         for (int i = 0; i < collectedWorkoutNames.size(); i++) {
             Label label = new Label();
             label = SetProfileImage
-                    .setBasicProfPic(collectedWorkoutPaths.get(i), 50);
-            label.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-background-radius: 5;");
+                    .setBasicProfPic(collectedWorkoutPaths.get(i), 40);
+            // label.setStyle("-fx-background-color: black; -fx-text-fill: white;
+            // -fx-background-radius: 5;");
             label.setPadding(new Insets(20, 20, 20, 20));
             label.setGraphicTextGap(20);
             label.setText(collectedWorkoutNames.get(i));
+            label.getStyleClass().add("label");
+            label.setMinWidth(170);
+            String workoutName = label.getText();
+            label.setOnMouseClicked(e -> {
+                openInWorkoutScreen(workoutName);
+            });
             scrollBox.getChildren().add(label);
         }
 
@@ -154,6 +183,7 @@ public class WokroutsScene {
         borderLayout.setTop(topMenuBar);
         borderLayout.setCenter(centerPanel);
         borderLayout.setLeft(workoutPanel);
+        borderLayout.setRight(gapPaneRight);
 
         // creating scene
         workoutScene = new Scene(borderLayout, 370, 500);
@@ -220,6 +250,108 @@ public class WokroutsScene {
             return null;
         }
 
+    }
+
+    public void get_last_week_calorie() {
+        // get 'todaysDate'
+        String todaysDateString = get_todays_date();
+        // inti 'todaysDate'
+        Date todaysDate = dateToSimpleDate(todaysDateString);
+        // init 'allCalorieBurnedLastWeek'
+        allCalorieBurnedLastWeek = 0;
+        try {
+            String allWorkoutDate = db.read_get_all_date(conn, CurrentUser.get_current_user());
+            String allWorkoutBurnedCalorie = db.read_all_workout_burned_calorie(conn, CurrentUser.get_current_user());
+            ArrayList<String> allWorkoutDateSep = separate_collect_workout_datas(allWorkoutDate);
+            ArrayList<String> allWorkoutBurnedCalorieSep = separate_collect_workout_datas(allWorkoutBurnedCalorie);
+            for (int i = 0; i < allWorkoutDateSep.size(); i++) {
+                // get current date
+                Date currDate = dateToSimpleDate(allWorkoutDateSep.get(i));
+                // get timedifference in miliseconds
+                long timeDiff = todaysDate.getTime() - currDate.getTime();
+                // transform miliseconds to days
+                long dayDiff = TimeUnit.MILLISECONDS.toDays(timeDiff) % 365;
+                // checking if date is smaller than today but not older than a week
+                if (dayDiff < 7) { // if workouts date is no longer than 7 days then get calorie
+                    // Read other saved datas and get calorie by index
+                    allCalorieBurnedLastWeek += Float.valueOf(allWorkoutBurnedCalorieSep.get(i));
+                }
+            }
+            // set caloriedBuned font properties
+            setCaloriesBurnedText();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void get_todays_calorie() {
+        // get 'todaysDate'
+        String todaysDateString = get_todays_date();
+        // inti 'todaysDate'
+        Date todaysDate = dateToSimpleDate(todaysDateString);
+        // init 'allCalorieBurnedLastWeek'
+        allCalorieBurnedToday = 0;
+        try {
+            String allWorkoutDate = db.read_get_all_date(conn, CurrentUser.get_current_user());
+            String allWorkoutBurnedCalorie = db.read_all_workout_burned_calorie(conn, CurrentUser.get_current_user());
+            ArrayList<String> allWorkoutDateSep = separate_collect_workout_datas(allWorkoutDate);
+            ArrayList<String> allWorkoutBurnedCalorieSep = separate_collect_workout_datas(allWorkoutBurnedCalorie);
+            for (int i = 0; i < allWorkoutDateSep.size(); i++) {
+                // get current date
+                Date currDate = dateToSimpleDate(allWorkoutDateSep.get(i));
+                // get timedifference in miliseconds
+                long timeDiff = todaysDate.getTime() - currDate.getTime();
+                // transform miliseconds to days
+                long dayDiff = TimeUnit.MILLISECONDS.toDays(timeDiff) % 365;
+                // checking if date is smaller than today but not older than a week
+                if (!(dayDiff > 0)) { // if workouts date is no longer than 7 days then get calorie
+                    // Read other saved datas and get calorie by index
+                    allCalorieBurnedToday += Float.valueOf(allWorkoutBurnedCalorieSep.get(i));
+                }
+            }
+            // set caloriedBuned font properties
+            setCaloriesBurnedTodayText();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String get_todays_date() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
+
+    public Date dateToSimpleDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        try {
+            java.util.Date utilDate = sdf.parse(date);
+            String dateString = new SimpleDateFormat("yyyy-MM-dd").format(utilDate);
+            return java.sql.Date.valueOf(dateString);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    private void setCaloriesBurnedText() {
+        caloriesBurnedWeekNum.setText(String.valueOf(allCalorieBurnedLastWeek));
+        caloriesBurnedWeekNum.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
+        // caloriesBurnedWeekNum.setHorizontalAlignment(SwingConstants.CENTER);
+        // caloriesBurnedWeekNum.setFont(Font.font(caloriesBurnedWeekNum.getFont().getName(),
+        // caloriesBurnedWeekNum.getFont().getStyle(), 20));
+    }
+
+    private void setCaloriesBurnedTodayText() {
+        caloriesBurnedDayNum.setText(String.valueOf(allCalorieBurnedToday));
+        // caloriesBurnedDayNum.setHorizontalAlignment(SwingConstants.CENTER);
+        caloriesBurnedDayNum.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
+        // setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
+    }
+
+    private void openInWorkoutScreen(String workoutName) {
+        InWorkout inWorkoutScene = new InWorkout();
+        window.setScene(inWorkoutScene.getInWorkoutScene(window, workoutName));
     }
 
 }

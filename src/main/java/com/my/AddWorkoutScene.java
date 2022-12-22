@@ -13,6 +13,14 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+
+import org.json.JSONObject;    
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONString;
+import org.json.JSONPointer;
 
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -50,14 +58,12 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.application.Application;
 
-// import org.apache.http.*;
-// import org.json.simple.JSONObject;
-// import org.json.simple.parser.JSONParser;
 
-// import java.net.URI;
-// import java.net.http.HttpClient;
-// import java.net.http.HttpRequest;
-// import java.net.http.HttpResponse;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class AddWorkoutScene {
 
@@ -72,7 +78,7 @@ public class AddWorkoutScene {
     private static VBox mainPanel;
     private static HBox bottomPanel, topPanel;
     private static Pane empty1, empty2;
-    private static final String DIRECTORY_PATH = "src/main/resources/com/my/assets/typeOfWorkouts";
+    private static final String DIRECTORY_PATH = "javapp/src/main/resources/com/my/assets/typeOfWorkouts";
     private static String chosenIconPath = "";
     private static String typeOfWorkout = "";
     private static ConnectToDB db = new ConnectToDB();
@@ -222,8 +228,10 @@ public class AddWorkoutScene {
                     String weight = db.get_weight_by_username(conn, CurrentUser.get_current_user());
                     // db.add_workout_burned_calorie(conn, getCalorie(getResponse(weight,
                     // workoutDurationField)), CurrentUser.get_current_user());
+                    db.add_workout_burned_calorie(conn, getCalorie(getResponse(weight, workoutDurationField.getText())), CurrentUser.get_current_user());
 
-                    // go_back_to_my_workouts();
+                    // navigate to workout scene
+                    openWorkoutScreen();
                 } catch (Exception err) {
                     System.out.println(err.getMessage());
                 }
@@ -295,39 +303,57 @@ public class AddWorkoutScene {
         return String.valueOf(dtf.format(now));
     }
 
-    // private HttpRequest getResponse(String usersWeight, String currentDuration) {
-    //     HttpRequest request = HttpRequest.newBuilder()
-    //             .uri(URI.create(
-    //                     String.format(
-    //                             "https://fitness-calculator.p.rapidapi.com/burnedcalorie?activityid=co_2&activitymin=%s&weight=%s",
-    //                             currentDuration, usersWeight)))
-    //             .header("X-RapidAPI-Key",
-    //                     "b4b40d284amshacf7b676b928e88p1a5c77jsned0db45910bf")
-    //             .header("X-RapidAPI-Host", "fitness-calculator.p.rapidapi.com")
-    //             .method("GET", HttpRequest.BodyPublishers.noBody())
-    //             .build();
-    //     return request;
-    // }
+    private HttpRequest getResponse(String usersWeight, String currentDuration) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(
+                        String.format(
+                                "https://fitness-calculator.p.rapidapi.com/burnedcalorie?activityid=co_2&activitymin=%s&weight=%s",
+                                currentDuration, usersWeight)))
+                .header("X-RapidAPI-Key",
+                        "b4b40d284amshacf7b676b928e88p1a5c77jsned0db45910bf")
+                .header("X-RapidAPI-Host", "fitness-calculator.p.rapidapi.com")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        return request;
+    }
 
-    // private String getCalorie(HttpRequest request) throws org.json.simple.parser.ParseException {
-    //     HttpResponse<String> response;
-    //     try {
-    //         response = HttpClient.newHttpClient().send(request,
-    //                 HttpResponse.BodyHandlers.ofString());
-    //         JSONParser parser = new JSONParser();
+    private String getCalorie(HttpRequest request)  {
+        HttpResponse<String> response;
+        try {
+            response = HttpClient.newHttpClient().send(request,
+                    HttpResponse.BodyHandlers.ofString());
 
-    //         JSONObject json = (JSONObject) parser.parse(String.valueOf(response.body()));
-    //         Object calorieJson = json.values().toArray()[1];
-    //         JSONObject calorie = (JSONObject) parser.parse(String.valueOf(calorieJson));
-    //         return String.valueOf(calorie.get("burnedCalorie"));
+            String responseBody = response.body();
+            JSONObject obj = new JSONObject(responseBody);
+  
 
-    //     } catch (IOException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     } catch (InterruptedException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
-    //     return null;
-    // }
+            JSONArray jsonArray = new JSONArray();
+            Iterator<String> keys = obj.keys();
+            while (keys.hasNext()) {
+                jsonArray.put(obj.get(keys.next()));
+            }
+            JSONObject jsonOBject = (JSONObject)jsonArray.get(1);
+            return String.valueOf(jsonOBject.get("burnedCalorie"));
+
+
+            // JSONParser parser = new JSONParser();
+            // JSONObject json = (JSONObject) parser.parse(String.valueOf(response.body()));
+            // Object calorieJson = json.values().toArray()[1];
+            // JSONObject calorie = (JSONObject) parser.parse(String.valueOf(calorieJson));
+            // return String.valueOf(calorie.get("burnedCalorie"));
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void openWorkoutScreen() throws IOException {
+        WokroutsScene workoutScene = new WokroutsScene();
+        window.setScene(workoutScene.getWorkoutScene(window));
+    }
 }
