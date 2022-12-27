@@ -50,33 +50,8 @@ public class WokroutsScene {
         // assign stage (and scene)
         this.window = window;
 
-        // init. Buttons
-        backButton = new Button("Back");
-        addWorkoutButton = new Button("Add Workout");
-        removeWorkoutButton = new Button("Remove Workout");
-
-        // add action
-        backButton.setOnAction(e -> {
-            try {
-                openHomeScreen();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        addWorkoutButton.setOnAction(e -> {
-            try {
-                openAddWorkoutScreen();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        // init labels
-        caloriesBurnedWeek = new Label("Calories burned last week");
-        caloriesBurnedDay = new Label("Calories burned today");
-        caloriesBurnedWeekNum = new Label();
-        caloriesBurnedDayNum = new Label();
+        // init. components
+        initComp();
 
         // get todays calorie
         get_todays_calorie();
@@ -84,69 +59,17 @@ public class WokroutsScene {
         // get last weeks calorie
         get_last_week_calorie();
 
-        // set calories label
-        setCaloriesBurnedTodayText();
-        setCaloriesBurnedText();
-
-        // init pane
-        gapPane = new Pane();
-        gapPaneRight = new Pane();
-
-        // set pane
-        gapPane.setPrefSize(20, 20);
-        gapPaneRight.setPrefSize(20, 0);
-
-        // init. HBox
-        topMenuBar = new HBox();
-
-        // init. VBox
-        centerPanel = new VBox(20);
-        scrollBox = new VBox(10);
-
-        // init ScrollPane
-        workoutPanel = new ScrollPane();
-
-        // set 'workoutPanel'
-        workoutPanel.setMinViewportWidth(100);
-        workoutPanel.setMaxWidth(210);
-        workoutPanel.setFitToWidth(true);
-
-        // add to 'scrollBox'
-
         // all workout name
-        ArrayList<String> collectedWorkoutNames = separate_collect_workout_datas(
-                db.read_all_workout_name(conn, CurrentUser.get_current_user()));
-        // all workout path
-        ArrayList<String> collectedWorkoutPaths = separate_collect_workout_datas(
-                db.read_all_workout_path(conn, CurrentUser.get_current_user()));
-
-        for (int i = 0; i < collectedWorkoutNames.size(); i++) {
-            Label label = new Label();
-            label = SetProfileImage
-                    .setBasicProfPic(collectedWorkoutPaths.get(i), 40);
-            // label.setStyle("-fx-background-color: black; -fx-text-fill: white;
-            // -fx-background-radius: 5;");
-            label.setPadding(new Insets(20, 20, 20, 20));
-            label.setGraphicTextGap(20);
-            label.setText(collectedWorkoutNames.get(i));
-            label.getStyleClass().add("label");
-            label.setMinWidth(170);
-            String workoutName = label.getText();
-            label.setOnMouseClicked(e -> {
-                openInWorkoutScreen(workoutName);
-            });
-            scrollBox.getChildren().add(label);
-        }
+        manageWorkoutLabels();
 
         // add to scrollPane
         workoutPanel.setContent(scrollBox);
 
-        // set VBox
-        centerPanel.setAlignment(Pos.CENTER);
+        // set Components
+        setComp();
 
-        // set HBox
-        topMenuBar.setAlignment(Pos.CENTER_RIGHT);
-        topMenuBar.setPadding(new Insets(20, 20, 0, 0));
+        // add action
+        addAction();
 
         // add to VBox
         centerPanel.getChildren().addAll(addWorkoutButton, gapPane, caloriesBurnedDay,
@@ -174,6 +97,88 @@ public class WokroutsScene {
         workoutScene = new Scene(borderLayout, 370, 500);
 
         // add style
+        addStyle();
+
+        return workoutScene;
+    }
+
+    private void setComp() {
+
+        // set VBox
+        centerPanel.setAlignment(Pos.CENTER);
+
+        // set HBox
+        topMenuBar.setAlignment(Pos.CENTER_RIGHT);
+        topMenuBar.setPadding(new Insets(20, 20, 0, 0));
+
+        // set calories label
+        setCaloriesBurnedTodayText();
+        setCaloriesBurnedText();
+
+        // set 'workoutPanel'
+        workoutPanel.setMinViewportWidth(100);
+        workoutPanel.setMaxWidth(210);
+        workoutPanel.setFitToWidth(true);
+
+        // set pane
+        gapPane.setPrefSize(20, 20);
+        gapPaneRight.setPrefSize(20, 0);
+    }
+
+    private void manageWorkoutLabels() throws IOException, FileNotFoundException {
+        ArrayList<String> collectedWorkoutNames = separate_collect_workout_datas(
+                db.read_all_workout_name(conn, CurrentUser.get_current_user()));
+        // all workout path
+        ArrayList<String> collectedWorkoutPaths = separate_collect_workout_datas(
+                db.read_all_workout_path(conn, CurrentUser.get_current_user()));
+
+        for (int i = 0; i < collectedWorkoutNames.size(); i++) {
+            Label label = new Label();
+            label = SetProfileImage
+                    .setBasicProfPic(collectedWorkoutPaths.get(i), 40);
+            // label.setStyle("-fx-background-color: black; -fx-text-fill: white;
+            // -fx-background-radius: 5;");
+            label.setPadding(new Insets(20, 20, 20, 20));
+            label.setGraphicTextGap(20);
+            label.setText(collectedWorkoutNames.get(i));
+            label.getStyleClass().add("label");
+            label.setMinWidth(170);
+            String workoutName = label.getText();
+            label.setOnMouseClicked(e -> {
+                openInWorkoutScreen(workoutName);
+            });
+            scrollBox.getChildren().add(label);
+        }
+    }
+
+    private void initComp() {
+        // init. Buttons
+        backButton = new Button("Back");
+        addWorkoutButton = new Button("Add Workout");
+        removeWorkoutButton = new Button("Remove Workout");
+
+        // init pane
+        gapPane = new Pane();
+        gapPaneRight = new Pane();
+
+        // init. HBox
+        topMenuBar = new HBox();
+
+        // init. VBox
+        centerPanel = new VBox(20);
+        scrollBox = new VBox(10);
+
+        // init ScrollPane
+        workoutPanel = new ScrollPane();
+
+        // init labels
+        caloriesBurnedWeek = new Label("Calories burned last week");
+        caloriesBurnedDay = new Label("Calories burned today");
+        caloriesBurnedWeekNum = new Label();
+        caloriesBurnedDayNum = new Label();
+    }
+
+    private void addStyle() {
         workoutScene.getStylesheets().add(addStyleSheet());
         backButton.getStyleClass().add("backButton");
         addWorkoutButton.getStyleClass().add("addWorkoutButton");
@@ -183,8 +188,24 @@ public class WokroutsScene {
         caloriesBurnedDayNum.getStyleClass().add("kcalDayNum");
         caloriesBurnedWeek.getStyleClass().add("kcalWeek");
         caloriesBurnedWeekNum.getStyleClass().add("kcalWeekNum");
+    }
 
-        return workoutScene;
+    private void addAction() {
+        backButton.setOnAction(e -> {
+            try {
+                openHomeScreen();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        addWorkoutButton.setOnAction(e -> {
+            try {
+                openAddWorkoutScreen();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private static String addStyleSheet() {

@@ -112,46 +112,7 @@ public class HomeScene2 {
         usernameTextField.setMinSize(200, 10);
 
         // add action
-        changeProfPicButton.setOnAction(e -> {
-            try {
-                openChangeAvatarScreen();
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            }
-        });
-        imageLabel.setOnMouseClicked(e -> {
-            // change screen to be able to choose avatar
-            try {
-                openChangeAvatarScreen();
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        logoutButton.setOnAction(e -> {
-            try {
-                openLoginScreen();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        settingsButton.setOnAction(e -> {
-            // open settings screen
-            try {
-                openSettingsScreen();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        myWorkoutsButton.setOnAction(e -> {
-            try {
-                openWorkoutScreen();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
+        addAction();
 
         // set up layouts
         borderLayout = new BorderPane();
@@ -243,6 +204,49 @@ public class HomeScene2 {
 
         // set window title
         return homeScene;
+    }
+
+    private void addAction() {
+        changeProfPicButton.setOnAction(e -> {
+            try {
+                openChangeAvatarScreen();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
+        imageLabel.setOnMouseClicked(e -> {
+            // change screen to be able to choose avatar
+            try {
+                openChangeAvatarScreen();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        logoutButton.setOnAction(e -> {
+            try {
+                openLoginScreen();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        settingsButton.setOnAction(e -> {
+            // open settings screen
+            try {
+                openSettingsScreen();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        myWorkoutsButton.setOnAction(e -> {
+            try {
+                openWorkoutScreen();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private static String getImageLink() {

@@ -456,15 +456,19 @@ public class InWorkout {
                 db.read_all_workout_path(conn, CurrentUser.get_current_user()));
         ArrayList<String> allDuration = separate_collect_workout_datas(
                 db.read_all_workout_duration(conn, CurrentUser.get_current_user()));
+        ArrayList<String> allBurnedCalories = separate_collect_workout_datas(
+                db.read_all_workout_burned_calorie(conn, CurrentUser.get_current_user()));
+        ArrayList<String> allWorkoutDates = separate_collect_workout_datas(
+                db.read_all_workout_date(conn, CurrentUser.get_current_user()));
         // use switch to switch between type and name
         switch (indexNum) {
             case 1:
                 chosenArrayList = new ArrayList<>(allWName);
-                update_old_data(newWorkoutData, currentWorkoutData, allWName, allWType, allWPath, allDuration, 1);
+                update_old_data(newWorkoutData, currentWorkoutData, allWName, allWType, allWPath, allDuration, allBurnedCalories, allWorkoutDates, 1);
                 break;
             case 2:
                 chosenArrayList = new ArrayList<>(allWType);
-                update_old_data(newWorkoutData, currentWorkoutData, allWName, allWType, allWPath, allDuration, 2);
+                update_old_data(newWorkoutData, currentWorkoutData, allWName, allWType, allWPath, allDuration, allBurnedCalories, allWorkoutDates, 2);
                 break;
             default:
                 break;
@@ -472,7 +476,7 @@ public class InWorkout {
     }
 
     private void update_old_data(String newWorkoutData, String currentWorkoutData, ArrayList<String> allWName,
-            ArrayList<String> allWType, ArrayList<String> allWPath, ArrayList<String> allDuration, int indexNum)
+            ArrayList<String> allWType, ArrayList<String> allWPath, ArrayList<String> allDuration, ArrayList<String> allBurnedCalories, ArrayList<String> allWorkoutDates, int indexNum)
             throws IOException {
         // If program finds the data we want to update, then it removes the old data and
         // appends the new data.
@@ -494,12 +498,16 @@ public class InWorkout {
                     db.add_workout_type(conn, allWType.get(i), CurrentUser.get_current_user());
                     db.add_workout_path(conn, allWPath.get(i), CurrentUser.get_current_user());
                     db.add_workout_duration(conn, allDuration.get(i), CurrentUser.get_current_user());
+                    db.add_workout_burned_calorie(conn, allBurnedCalories.get(i), CurrentUser.get_current_user());
+                    db.add_workout_date(conn, allWorkoutDates.get(i), CurrentUser.get_current_user());
                     break;
                 case 2:
                     db.add_workout_name(conn, allWName.get(i), CurrentUser.get_current_user());
                     db.add_workout_type(conn, chosenArrayList.get(i), CurrentUser.get_current_user());
                     db.add_workout_path(conn, allWPath.get(i), CurrentUser.get_current_user());
                     db.add_workout_duration(conn, allDuration.get(i), CurrentUser.get_current_user());
+                    db.add_workout_burned_calorie(conn, allBurnedCalories.get(i), CurrentUser.get_current_user());
+                    db.add_workout_date(conn, allWorkoutDates.get(i), CurrentUser.get_current_user());
                     break;
                 default:
                     break;
@@ -543,40 +551,33 @@ public class InWorkout {
         for (int i = 0; i < collectedWorkoutNames.size(); i++) {
             if (collectedWorkoutNames.get(i).equals(title.getText())) {
 
-                // get workout type and path from db by index
-                String typeToDelete = collectedWorkoutTypes.get(i);
-                String pathToDelete = collectedWorkoutPaths.get(i);
-                String durationToDelete = collectedWorkoutdurations.get(i);
-
                 // delete items from ArrayList
-                for (int j = 0; j < collectedWorkoutNames.size(); j++) {
-                    if (collectedWorkoutNames.get(i).equals(title.getText())) {
-                        collectedWorkoutNames.remove(i);
-                        collectedWorkoutTypes.remove(i);
-                        collectedWorkoutPaths.remove(i);
-                        collectedWorkoutdurations.remove(i);
-                        collectedWorkoutBurnedCalories.remove(i);
-                        collectedWorkoutDates.remove(i);
-                    }
-                    break;
+                if (collectedWorkoutNames.get(i).equals(title.getText())) {
+                    collectedWorkoutNames.remove(i);
+                    collectedWorkoutTypes.remove(i);
+                    collectedWorkoutPaths.remove(i);
+                    collectedWorkoutdurations.remove(i);
+                    collectedWorkoutBurnedCalories.remove(i);
+                    collectedWorkoutDates.remove(i);
                 }
+                break;
 
-                // delete all from db before appending new value
-                db.remove_all_workout_data(conn, CurrentUser.get_current_user());
-
-                // append values back to db
-                for (int j = 0; j < collectedWorkoutNames.size(); j++) {
-                    db.add_workout_name(conn, collectedWorkoutNames.get(j), CurrentUser.get_current_user());
-                    db.add_workout_type(conn, collectedWorkoutTypes.get(j), CurrentUser.get_current_user());
-                    db.add_workout_path(conn, collectedWorkoutPaths.get(j), CurrentUser.get_current_user());
-                    db.add_workout_duration(conn, collectedWorkoutdurations.get(j), CurrentUser.get_current_user());
-                    db.add_workout_burned_calorie(conn, collectedWorkoutBurnedCalories.get(i),
-                            CurrentUser.get_current_user());
-                    db.add_workout_date(conn, collectedWorkoutDates.get(i), CurrentUser.get_current_user());
-                }
-                openWorkoutScreen();
             }
         }
+        // delete all from db before appending new value
+        db.remove_all_workout_data(conn, CurrentUser.get_current_user());
+
+        // append values back to db
+        for (int j = 0; j < collectedWorkoutNames.size(); j++) {
+            db.add_workout_name(conn, collectedWorkoutNames.get(j), CurrentUser.get_current_user());
+            db.add_workout_type(conn, collectedWorkoutTypes.get(j), CurrentUser.get_current_user());
+            db.add_workout_path(conn, collectedWorkoutPaths.get(j), CurrentUser.get_current_user());
+            db.add_workout_duration(conn, collectedWorkoutdurations.get(j), CurrentUser.get_current_user());
+            db.add_workout_burned_calorie(conn, collectedWorkoutBurnedCalories.get(j),
+                    CurrentUser.get_current_user());
+            db.add_workout_date(conn, collectedWorkoutDates.get(j), CurrentUser.get_current_user());
+        }
+        openWorkoutScreen();
     }
 
     private boolean titleExists() {
