@@ -28,16 +28,19 @@ public class ChangeAvatarScene {
     private static Scene changeAvatarScene;
     private static ScrollPane scrollPane;
     private static GridPane scrollContainer;
-    private static final String DIRECTORY_PATH = "javapp/src/main/resources/com/my/assets";
+    private static final String DIRECTORY_PATH = "javapp/src/main/resources/com/my/assets/prof_pics";
     private static Pane emptyPane, emptyPane2, emptyPane3, emptyPane4;
     private static Stage window;
     private static Scene loginScene;
 
-    public Scene getChangeAvatarScene(Stage window, Scene loginScene) {
+    public Scene getChangeAvatarScene(Stage window, Scene loginScene) throws FileNotFoundException {
 
         // asign window
         this.window = window;
         this.loginScene = loginScene;
+
+        // Set the resized image as the window's icon
+        window.getIcons().add(AppLogoClass.getLogo());
 
         // init. VBox
         scrollContainer = new GridPane();

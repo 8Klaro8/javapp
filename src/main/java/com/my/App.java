@@ -58,28 +58,108 @@ public class App extends Application {
             e.consume();
         });
 
-        // init. Label
-        usernameLabel = new Label("Username");
-        passwordLabel = new Label("Password");
-
-        // set label size
-        usernameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
-        passwordLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
-
-        // init. Button
-        loginButton = new Button("Login");
-        registerButton = new Button("Register");
-
-        // init. 'textArea'
-        usernameTextField = new TextField();
-        passworTextField = new PasswordField();
-        usernameTextField.setPrefSize(10, 40);
-        passworTextField.setPrefSize(10, 40);
+        // init comp
+        initComp();
 
         // set textfield size
         usernameTextField.setMinSize(200, 10);
 
         // add action
+        addAction();
+
+        // set up layouts
+        setUpLayouts();
+
+        // set emptyPane's size
+        setPanesSize();
+
+        // set VBox alignment
+        buttonBox.setAlignment(Pos.CENTER);
+
+        // add to VBox
+        buttonBox.getChildren().addAll(usernameLabel, usernameTextField, passwordLabel, passworTextField, buttonGapPane,
+                loginButton, registerButton);
+
+        // add items to stylesheet
+        addStyle();
+
+        // add to layout
+        layout.add(buttonBox, 0, 0);
+
+        // add layouts to border layout
+        addToBorderLayout();
+
+        // set up scenes
+        loginScene = new Scene(borderLayout, 370, 500);
+
+        // add CSS
+        loginScene.getStylesheets().add(addStyleSheet());
+
+        // set window title
+        window.setTitle("KlaroFit");
+
+        // set scene and show
+        // Scene homeScene = HomeScreen.getHomeScreen();
+        // homeScene2.getStylesheets().add(addStyleSheet());
+
+        // temp.
+        // ChangeAvatarScene changeAvatarScene = new ChangeAvatarScene();
+        // SettingsScene settingsScene = new SettingsScene();
+        WokroutsScene wkScene = new WokroutsScene();
+
+        // Set the resized image as the window's icon
+        window.getIcons().add(AppLogoClass.getLogo());
+
+        // window.setScene(wkScene.getWorkoutScene(stage));
+        window.setScene(loginScene);
+        window.show();
+
+    }
+
+    private void setPanesSize() {
+        emptyPane.setPrefSize(60, 0);
+        emptyPane2.setPrefSize(60, 0);
+        emptyPane3.setPrefSize(0, 80);
+        emptyPane4.setPrefSize(0, 30);
+        buttonGapPane.setPrefSize(0, 20);
+    }
+
+    private void setUpLayouts() {
+        borderLayout = new BorderPane();
+        emptyPane = new Pane();
+        emptyPane2 = new Pane();
+        emptyPane3 = new Pane();
+        emptyPane4 = new Pane();
+        buttonGapPane = new Pane();
+    }
+
+    private void addToBorderLayout() {
+        borderLayout.setLeft(emptyPane);
+        borderLayout.setRight(emptyPane2);
+        borderLayout.setTop(emptyPane3);
+        borderLayout.setBottom(emptyPane4);
+        borderLayout.setCenter(layout);
+    }
+
+    private void addStyle() {
+        usernameLabel.getStyleClass().add("username-label");
+        passwordLabel.getStyleClass().add("password-label");
+
+        usernameTextField.getStyleClass().add("username-textfield");
+        passworTextField.getStyleClass().add("password-textfield");
+
+        emptyPane.getStyleClass().add("empty1");
+        emptyPane2.getStyleClass().add("empty2");
+        emptyPane3.getStyleClass().add("empty3");
+        emptyPane4.getStyleClass().add("empty4");
+
+        layout.getStyleClass().add("layout");
+
+        loginButton.getStyleClass().add("login-button");
+        registerButton.getStyleClass().add("register-button");
+    }
+
+    private void addAction() {
         loginButton.setOnAction(e -> {
             // declare username and password
             String username = usernameTextField.getText();
@@ -127,20 +207,26 @@ public class App extends Application {
         registerButton.setOnAction(e -> {
             openRegisterScene();
         });
-        // set up layouts
-        borderLayout = new BorderPane();
-        emptyPane = new Pane();
-        emptyPane2 = new Pane();
-        emptyPane3 = new Pane();
-        emptyPane4 = new Pane();
-        buttonGapPane = new Pane();
+    }
 
-        // set emptyPane's size
-        emptyPane.setPrefSize(60, 0);
-        emptyPane2.setPrefSize(60, 0);
-        emptyPane3.setPrefSize(0, 80);
-        emptyPane4.setPrefSize(0, 30);
-        buttonGapPane.setPrefSize(0, 20);
+    private void initComp() {
+        // init. Label
+        usernameLabel = new Label("Username");
+        passwordLabel = new Label("Password");
+
+        // set label size
+        usernameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
+        passwordLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 20));
+
+        // init. Button
+        loginButton = new Button("Login");
+        registerButton = new Button("Register");
+
+        // init. 'textArea'
+        usernameTextField = new TextField();
+        passworTextField = new PasswordField();
+        usernameTextField.setPrefSize(10, 40);
+        passworTextField.setPrefSize(10, 40);
 
         // init. (center) layout
         layout = new GridPane();
@@ -151,63 +237,6 @@ public class App extends Application {
 
         // init. VBox
         buttonBox = new VBox(10);
-
-        // set VBox alignment
-        buttonBox.setAlignment(Pos.CENTER);
-
-        // add to VBox
-        buttonBox.getChildren().addAll(usernameLabel, usernameTextField, passwordLabel, passworTextField, buttonGapPane,
-                loginButton, registerButton);
-
-        // add items to stylesheet
-        usernameLabel.getStyleClass().add("username-label");
-        passwordLabel.getStyleClass().add("password-label");
-
-        usernameTextField.getStyleClass().add("username-textfield");
-        passworTextField.getStyleClass().add("password-textfield");
-
-        emptyPane.getStyleClass().add("empty1");
-        emptyPane2.getStyleClass().add("empty2");
-        emptyPane3.getStyleClass().add("empty3");
-        emptyPane4.getStyleClass().add("empty4");
-
-        layout.getStyleClass().add("layout");
-
-        loginButton.getStyleClass().add("login-button");
-        registerButton.getStyleClass().add("register-button");
-
-        // add to layout
-        layout.add(buttonBox, 0, 0);
-
-        // add layouts to border layout
-        borderLayout.setLeft(emptyPane);
-        borderLayout.setRight(emptyPane2);
-        borderLayout.setTop(emptyPane3);
-        borderLayout.setBottom(emptyPane4);
-        borderLayout.setCenter(layout);
-
-        // set up scenes
-        loginScene = new Scene(borderLayout, 370, 500);
-
-        // add CSS
-        loginScene.getStylesheets().add(addStyleSheet());
-
-        // set window title
-        window.setTitle("KlaroFit");
-
-        // set scene and show
-        // Scene homeScene = HomeScreen.getHomeScreen();
-        // homeScene2.getStylesheets().add(addStyleSheet());
-
-        // temp.
-        // ChangeAvatarScene changeAvatarScene = new ChangeAvatarScene();
-        // SettingsScene settingsScene = new SettingsScene();
-        WokroutsScene wkScene = new WokroutsScene();
-
-        window.setScene(wkScene.getWorkoutScene(stage));
-        // window.setScene(loginScene);
-        window.show();
-
     }
 
     private static String addStyleSheet() {

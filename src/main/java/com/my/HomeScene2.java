@@ -35,6 +35,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +43,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.Connection;
 
+import javax.imageio.ImageIO;
 import javax.security.auth.login.LoginContext;
+import java.awt.image.BufferedImage;
 
 /**
  * JavaFX App
@@ -71,9 +74,15 @@ public class HomeScene2 {
         this.window = window;
         this.loginScene = logiScene;
 
+        // set logo
+
+
+        // Set the resized image as the window's icon
+        window.getIcons().add(AppLogoClass.getLogo());
+
         // get current user
         String currentUserString = CurrentUser.get_current_user();
-        
+
         // init. Label
         usernameLabel = new Label("Username");
         passwordLabel = new Label("Password");
@@ -104,11 +113,19 @@ public class HomeScene2 {
 
         // add action
         changeProfPicButton.setOnAction(e -> {
-            openChangeAvatarScreen();
+            try {
+                openChangeAvatarScreen();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
         });
         imageLabel.setOnMouseClicked(e -> {
             // change screen to be able to choose avatar
-            openChangeAvatarScreen();
+            try {
+                openChangeAvatarScreen();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
         });
 
         logoutButton.setOnAction(e -> {
@@ -168,17 +185,18 @@ public class HomeScene2 {
         buttonBox.setAlignment(Pos.CENTER);
 
         // set VBox spacing
-        buttonBox.setPadding(new Insets(30,0,0,0));
+        buttonBox.setPadding(new Insets(30, 0, 0, 0));
 
         // set HBox alignment
         menuBox.setAlignment(Pos.BASELINE_CENTER);
 
         // set HBox spacing
         menuBox.setSpacing(200);
-        menuBox.setPadding(new Insets(20,0,0,0));
+        menuBox.setPadding(new Insets(20, 0, 0, 0));
 
         // add to VBox
-        buttonBox.getChildren().addAll(greetingsLabel, imageLabel, buttonGapPane, changeProfPicButton, myWorkoutsButton);
+        buttonBox.getChildren().addAll(greetingsLabel, imageLabel, buttonGapPane, changeProfPicButton,
+                myWorkoutsButton);
 
         // add to HBox
         menuBox.getChildren().addAll(settingsButton, logoutButton);
@@ -252,7 +270,7 @@ public class HomeScene2 {
         CurrentUser.set_current_user("");
     }
 
-    private void openChangeAvatarScreen() {
+    private void openChangeAvatarScreen() throws FileNotFoundException {
         ChangeAvatarScene changeAvatarScene = new ChangeAvatarScene();
         window.setScene(changeAvatarScene.getChangeAvatarScene(window, loginScene));
     }
@@ -266,6 +284,5 @@ public class HomeScene2 {
         WokroutsScene workoutScene = new WokroutsScene();
         window.setScene(workoutScene.getWorkoutScene(window));
     }
-    
 
 }

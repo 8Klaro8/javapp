@@ -1,0 +1,17 @@
+.root {
+    -fx-background-color: rgb(53, 53, 53);
+}
+
+.buttonNo,
+.buttonYes {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-text-fill: white;
+    -fx-background-color: rgb(107, 27, 67);
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+}

@@ -514,7 +514,7 @@ public class ConnectToDB {
 
     public void remove_all_workout_data(Connection conn, String current_user) {
         String query = String.format(
-                "UPDATE my_users SET workout_name = ', ', workout_type = ', ', workout_path = ', ', workout_duration = ', ' WHERE username='%s';",
+                "UPDATE my_users SET workout_name = ', ', workout_type = ', ', workout_path = ', ', date = ', ', workout_duration = ', ', calorie_burned = ', ' WHERE username='%s';",
                 current_user);
         try {
             Statement statmeent = conn.createStatement();
@@ -605,7 +605,7 @@ public class ConnectToDB {
         return null;
     }
 
-    public String read_get_all_date(Connection conn, String current_user) {
+    public String read_all_workout_date(Connection conn, String current_user) {
         String value = "";
         String query = String.format("SELECT date FROM my_users WHERE username = '%s'", current_user);
         try {

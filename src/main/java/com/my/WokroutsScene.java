@@ -138,21 +138,6 @@ public class WokroutsScene {
             scrollBox.getChildren().add(label);
         }
 
-        // create lables
-        // for (int i = 0; i < 20; i++) {
-        // testwkLabel = new Label();
-        // testwkLabel = SetProfileImage
-        // .setBasicProfPic("klaro\\src\\main\\resources\\assets\\basic_prif_pic
-        // copy.png", 50);
-        // testwkLabel.setStyle("-fx-background-color: black; -fx-text-fill: white;
-        // -fx-background-radius: 5;");
-        // testwkLabel.setPadding(new Insets(20, 20, 20, 20));
-        // testwkLabel.setGraphicTextGap(20);
-        // testwkLabel.setText("TESTsfe\nefefef");
-
-        // scrollBox.getChildren().add(testwkLabel);
-        // }
-
         // add to scrollPane
         workoutPanel.setContent(scrollBox);
 
@@ -164,7 +149,7 @@ public class WokroutsScene {
         topMenuBar.setPadding(new Insets(20, 20, 0, 0));
 
         // add to VBox
-        centerPanel.getChildren().addAll(addWorkoutButton, removeWorkoutButton, gapPane, caloriesBurnedDay,
+        centerPanel.getChildren().addAll(addWorkoutButton, gapPane, caloriesBurnedDay,
                 caloriesBurnedDayNum,
                 caloriesBurnedWeek, caloriesBurnedWeekNum);
 
@@ -260,7 +245,7 @@ public class WokroutsScene {
         // init 'allCalorieBurnedLastWeek'
         allCalorieBurnedLastWeek = 0;
         try {
-            String allWorkoutDate = db.read_get_all_date(conn, CurrentUser.get_current_user());
+            String allWorkoutDate = db.read_all_workout_date(conn, CurrentUser.get_current_user());
             String allWorkoutBurnedCalorie = db.read_all_workout_burned_calorie(conn, CurrentUser.get_current_user());
             ArrayList<String> allWorkoutDateSep = separate_collect_workout_datas(allWorkoutDate);
             ArrayList<String> allWorkoutBurnedCalorieSep = separate_collect_workout_datas(allWorkoutBurnedCalorie);
@@ -292,7 +277,7 @@ public class WokroutsScene {
         // init 'allCalorieBurnedLastWeek'
         allCalorieBurnedToday = 0;
         try {
-            String allWorkoutDate = db.read_get_all_date(conn, CurrentUser.get_current_user());
+            String allWorkoutDate = db.read_all_workout_date(conn, CurrentUser.get_current_user());
             String allWorkoutBurnedCalorie = db.read_all_workout_burned_calorie(conn, CurrentUser.get_current_user());
             ArrayList<String> allWorkoutDateSep = separate_collect_workout_datas(allWorkoutDate);
             ArrayList<String> allWorkoutBurnedCalorieSep = separate_collect_workout_datas(allWorkoutBurnedCalorie);

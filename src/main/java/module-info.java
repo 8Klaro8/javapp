@@ -4,6 +4,7 @@ module com.my {
     requires java.sql;
     requires java.net.http;
     requires org.json;
+    requires java.desktop;
 
 
     opens com.my to javafx.fxml;

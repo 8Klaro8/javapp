@@ -4,10 +4,61 @@
 
 .title,
 .type,
-.burnedCal,
+.burnedCalorie,
 .duration,
 .burnedCalNum,
-.durationNum {
+.durationNum,
+.newTitLabel,
+.newTypeLabel {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+}
+
+.burnedCalorie,
+.testLabel2,
+.testLabel3 {
     -fx-text-fill: white;
 }
+
+.back,
+.editTitle,
+.editType,
+.done1,
+.done2 {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-text-fill: white;
+}
+
+.back {
+    -fx-background-color: rgb(93, 93, 93);
+}
+
+.editTitle,
+.editType,
+.done1,
+.done2 {
+    -fx-background-color: rgb(107, 27, 67);
+    -fx-font-weight: bold;
+}
+
+.gridPane1,
+.gridPane2 {
+    -fx-background-color: rgb(71, 71, 71);
+    -fx-background-radius: 10;
+    -fx-padding: 15 10;
+}
+
+.remove {
+    -fx-font-size: 15;
+    -fx-border-radius: 100;
+    -fx-background-radius: 100;
+    -fx-text-fill: white;
+    -fx-background-color: rgb(184, 63, 123);
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+}
+
 
