@@ -1,6 +1,7 @@
 package com.my;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -30,13 +31,13 @@ public class ConfirmBox {
     private static VBox centerPanel;
     private static Stage window;
     private static Label label;
-    private static final String MESSAGE = "Are you sure you want to close?";
+    private static final String MESSAGE = "Are you sure you want to exit?";
 
-    public static boolean confirmChoice(String text) {
+    public static boolean confirmChoice(String text) throws FileNotFoundException {
         return mainFunc();
     }
 
-    private static boolean mainFunc() {
+    private static boolean mainFunc() throws FileNotFoundException {
         // set up window
         window = new Stage();
 
@@ -53,7 +54,10 @@ public class ConfirmBox {
         addAction();
         
         // setup scene
-        scene = new Scene(borderPane, 300,100);
+        scene = new Scene(borderPane, 320,160);
+
+        // set logo
+        window.getIcons().add(AppLogoClass.getLogo());
 
         // add style
         setStyle();
@@ -92,8 +96,8 @@ public class ConfirmBox {
         buttonNo.setMinWidth(40);
         buttonYes.setMinWidth(40);
 
-        emptyPane1.setPrefSize(0, 10);
-        emptyPane2.setPrefSize(10, 0);
+        emptyPane1.setPrefSize(0, 30);
+        emptyPane2.setPrefSize(15, 0);
 
         layout.setAlignment(Pos.CENTER);
         layout2.setAlignment(Pos.CENTER);
