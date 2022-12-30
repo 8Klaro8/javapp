@@ -44,7 +44,7 @@ public class RegisterScene {
     Stage window;
     private static String username;
     private static HashPassword hashPWD = new HashPassword();
-    private static final String BASE_PROF_PIC = "javapp/src/main/resources/com/my/assets/prof_pics/basic_prif_pic.png";
+    private static final String BASE_PROF_PIC = "javapp/src/main/resources/com/my/assets/prof_pics/prif_pic_2.png";
 
     public Scene getRegisterScene(Stage window, Scene loginScene) {
 

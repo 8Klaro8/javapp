@@ -54,7 +54,11 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         window = stage;
         window.setOnCloseRequest(e -> {
-            closeProgram();
+            try {
+                closeProgram();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
             e.consume();
         });
 
@@ -166,6 +170,13 @@ public class App extends Application {
             String givenPWD = passworTextField.getText();
             // declare password hash
             HashPassword hashPWD = new HashPassword();
+
+            // check if fieelds are empty
+            if (username.isEmpty() || givenPWD.isEmpty()) {
+                AlertBox.display("Empty", "Empty fields", "Close");
+                return;
+            }
+
             // check if fields are empty
             if (username.isEmpty() || givenPWD.isEmpty()) {
                 AlertBox.display("Error", "Missing username or password", "Close");
@@ -185,11 +196,8 @@ public class App extends Application {
                     passworTextField.setText("");
                 }
             } catch (Exception err) {
+
                 // check if user is NOT exists and give respond to it
-                if (username.isEmpty() || givenPWD.isEmpty()) {
-                    AlertBox.display("Empty", "Empty fields", "Close");
-                    return;
-                }
                 try {
                     boolean userFound = db.username_exists(conn, username);
                     if (!(userFound)) {
@@ -246,7 +254,7 @@ public class App extends Application {
                 .replace("\\", "/").replace(" ", "%20");
     }
 
-    private static void closeProgram() {
+    private static void closeProgram() throws FileNotFoundException {
         if (ConfirmBox.confirmChoice("Are you sure you want to close the program?")) {
             closeTheProgram();
         }

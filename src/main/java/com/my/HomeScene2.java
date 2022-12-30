@@ -256,7 +256,7 @@ public class HomeScene2 {
                 .replace("\\", "/").replace(" ", "%20");
     }
 
-    private static void closeProgram() {
+    private static void closeProgram() throws FileNotFoundException {
         if (ConfirmBox.confirmChoice("Are you sure you want to close the program?")) {
             closeTheProgram();
         }

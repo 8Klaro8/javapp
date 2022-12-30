@@ -30,86 +30,57 @@ public class SettingsScene {
     private static GridPane verticalBar;
     private static Button changeDetailsButton, backButton;
     private static HBox horizontalBar;
-    private static Label usernamLabel, fNameLabel, lNameLabel, emailLabel, usernameField, fNameField, lNameField, emailField; 
+    private static Label usernamLabel, fNameLabel, lNameLabel, emailLabel, usernameField, fNameField, lNameField,
+            emailField;
     private static Pane emptyPane, emptyPane2, emptyPane3;
     private static ArrayList<String> chosenUser;
-    private static ConnectToDB db;
-    private static Connection conn;
-    
+    private static ConnectToDB db = new ConnectToDB();
+    private static Connection conn = db.connect_to_db("accounts", "postgres", System.getenv("PASSWORD"));
     public Scene getSettingsScene(Stage window, Scene loginScene) throws IOException {
 
-        // init DB and connection
-        db = new ConnectToDB();
-        conn = db.connect_to_db("accounts", "postgres", System.getenv("PASSWORD"));
+        // init. components
+        initComp(window, loginScene);
 
-        // assign window and scene
-        this.window = window;
-        this.loginScene = loginScene;
-
-        // init. GridPanes
-        verticalBar = new GridPane();
-
-        // set verticals bar padding
-        verticalBar.setPadding(new Insets(20, 0, 0, 0));
-
-        // align VBox
-        verticalBar.setAlignment(Pos.CENTER_LEFT);
-        verticalBar.setVgap(60);
-        verticalBar.setHgap(40);
-
-        // init HBox
-        horizontalBar = new HBox(50);
-
-        // style horizontal baar
-        horizontalBar.setAlignment(Pos.BASELINE_CENTER);
-        horizontalBar.setSpacing(155);
-        horizontalBar.setPadding(new Insets(20,0,0,0));
-
-        // init. buttons
-        changeDetailsButton = new Button("Change details");
-        backButton = new Button("Back");
-
-        // init. labels
-        usernamLabel = new Label("Username:");
-        fNameLabel = new Label("First name:");
-        lNameLabel = new Label("Last name:");
-        emailLabel = new Label("Email:");
-
-        // init. textfields
-        chosenUser = db.get_by_name(conn, CurrentUser.get_current_user());
-        usernameField = new Label(chosenUser.get(2));
-        fNameField = new Label(chosenUser.get(4));
-        lNameField = new Label(chosenUser.get(5));
-        emailField = new Label(chosenUser.get(chosenUser.size() - 1));
-
-        // set label font
-        usernamLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
-        fNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
-        lNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
-        emailLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
-
-        // init. empty panes
-        emptyPane = new Pane();
-        emptyPane2 = new Pane();
-        emptyPane3 = new Pane();
-
-        // set 'emptyPanes' size
-        emptyPane.setPrefSize(60, 0);
-        emptyPane2.setPrefSize(60, 0);
-        emptyPane3.setPrefSize(0, 80);
+        // set components
+        setComp();
 
         // add items to 'gridPane'
-        verticalBar.add(usernamLabel, 0, 0);
-        verticalBar.add(fNameLabel, 0, 1);
-        verticalBar.add(lNameLabel, 0, 2);
-        verticalBar.add(emailLabel, 0, 3);
-
-        verticalBar.add(usernameField, 1, 0);
-        verticalBar.add(fNameField, 1, 1);
-        verticalBar.add(lNameField, 1, 2);
-        verticalBar.add(emailField, 1, 3);
+        addToGridPane();
 
         // add action
+        addAction();
+
+        // style buttons
+        changeDetailsButton.setMinSize(100, 30);
+        backButton.setMinSize(70, 30);
+
+        // add buttons to horizontal bar
+        horizontalBar.getChildren().addAll(changeDetailsButton, backButton);
+
+        // create border layout
+        borderLayout = new BorderPane();
+
+        // add bars to borderlayout
+        addToBorderLayout();
+
+        // create settings scene
+        settingsScene = new Scene(borderLayout, 370, 500);
+
+        // add style
+        addStyle();
+
+        return settingsScene;
+    }
+
+    private void addToBorderLayout() {
+        borderLayout.setTop(horizontalBar);
+        borderLayout.setCenter(verticalBar);
+        borderLayout.setRight(emptyPane);
+        borderLayout.setLeft(emptyPane2);
+        borderLayout.setBottom(emptyPane3);
+    }
+
+    private void addAction() {
         backButton.setOnAction(e -> {
             try {
                 openHomeScreen();
@@ -124,28 +95,91 @@ public class SettingsScene {
                 e1.printStackTrace();
             }
         });
+    }
 
-        // style buttons
-        changeDetailsButton.setMinSize(100, 30);
-        backButton.setMinSize(70, 30);
+    private void addToGridPane() {
+        verticalBar.add(usernamLabel, 0, 0);
+        verticalBar.add(fNameLabel, 0, 1);
+        verticalBar.add(lNameLabel, 0, 2);
+        verticalBar.add(emailLabel, 0, 3);
 
-        // add buttons to horizontal bar
-        horizontalBar.getChildren().addAll(changeDetailsButton, backButton);
+        verticalBar.add(usernameField, 1, 0);
+        verticalBar.add(fNameField, 1, 1);
+        verticalBar.add(lNameField, 1, 2);
+        verticalBar.add(emailField, 1, 3);
+    }
 
-        // create border layout
-        borderLayout = new BorderPane();
+    private void setComp() {
+        // style horizontal baar
+        horizontalBar.setAlignment(Pos.BASELINE_CENTER);
+        horizontalBar.setSpacing(155);
+        horizontalBar.setPadding(new Insets(20, 0, 0, 0));
 
-        // add bars to borderlayout
-        borderLayout.setTop(horizontalBar);
-        borderLayout.setCenter(verticalBar);
-        borderLayout.setRight(emptyPane);
-        borderLayout.setLeft(emptyPane2);
-        borderLayout.setBottom(emptyPane3);
+        // set verticals bar padding
+        verticalBar.setPadding(new Insets(20, 0, 0, 0));
 
-        // create settings scene
-        settingsScene = new Scene(borderLayout, 370, 500);
+        // align VBox
+        verticalBar.setAlignment(Pos.CENTER_LEFT);
+        verticalBar.setVgap(60);
+        verticalBar.setHgap(40);
 
-        // add style
+        // set label font
+        usernamLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
+        fNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
+        lNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
+        emailLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 12));
+
+        // set 'emptyPanes' size
+        emptyPane.setPrefSize(60, 0);
+        emptyPane2.setPrefSize(60, 0);
+        emptyPane3.setPrefSize(0, 80);
+    }
+
+    private void initComp(Stage window, Scene loginScene) throws IOException {
+        // assign window and scene
+        this.window = window;
+        this.loginScene = loginScene;
+
+        // init. GridPanes
+        verticalBar = new GridPane();
+
+        // init HBox
+        horizontalBar = new HBox(50);
+
+        // init. buttons
+        changeDetailsButton = new Button("Change details");
+        backButton = new Button("Back");
+
+        // init. labels
+        usernamLabel = new Label("Username:");
+        fNameLabel = new Label("First name:");
+        lNameLabel = new Label("Last name:");
+        emailLabel = new Label("Email:");
+
+        // init. textfields
+        chosenUser = db.get_by_name(conn, CurrentUser.get_current_user());
+
+        // check if field is empy yet and if so then display nothing
+        usernameField = new Label(fieldIsEmpty(2));
+        fNameField = new Label(fieldIsEmpty(4));
+        lNameField = new Label(fieldIsEmpty(5));
+        emailField = new Label(fieldIsEmpty(chosenUser.size() - 1));
+
+        // init. empty panes
+        emptyPane = new Pane();
+        emptyPane2 = new Pane();
+        emptyPane3 = new Pane();
+    }
+
+    private String fieldIsEmpty(int indexNum) {
+        String fieldValue = chosenUser.get(indexNum).strip();
+        if(fieldValue.equals(",")){
+            return "";
+        }
+        return chosenUser.get(indexNum);
+    }
+
+    private void addStyle() {
         settingsScene.getStylesheets().add(addStyleSheet());
         changeDetailsButton.getStyleClass().add("changeDetailsButton");
         backButton.getStyleClass().add("backButton");
@@ -162,8 +196,6 @@ public class SettingsScene {
         emptyPane.getStyleClass().add("empty");
         emptyPane2.getStyleClass().add("empty2");
         emptyPane3.getStyleClass().add("empty3");
-
-        return settingsScene;
     }
 
     private static String addStyleSheet() {

@@ -31,79 +31,121 @@ public class ChangeDetails {
     private static Stage window;
     private static Scene loginScene;
     private static ArrayList<String> chosenUser;
-    private static ConnectToDB db;
-    private static Connection conn;
+    private static ConnectToDB db = new ConnectToDB();
+    private static Connection conn = db.connect_to_db("accounts", "postgres", System.getenv("PASSWORD"));
     private static Pane emptyPane, emptyPane2, emptyPane3, emptyPane4, emptyGapPane;
     private static String newUsername, newFName, newLName, newEmail;
     private static String user_id;
 
     public Scene getChangeDetailsScene(Stage window, Scene loginScene) throws IOException {
 
-        // init DB and connection
-        db = new ConnectToDB();
-        conn = db.connect_to_db("accounts", "postgres", System.getenv("PASSWORD"));
+        // init. comp
+        initComp(window, loginScene);
 
-        // assign parameters
-        this.window = window;
-        this.loginScene = loginScene;
+        // add action
+        addAction();
 
-        // init mainPane
-        mainPane = new VBox(20);
+        // set comp.
+        setComp();
 
-        // init labels
-        usernameLabel = new Label("Username");
-        fNameLabel = new Label("First name");
-        lNameLabel = new Label("Last name");
-        emailLabel = new Label("email");
+        // add itmes to gridPane
+        mainPane.getChildren().addAll(usernameLabel, usernameField, fNameLabel, fNameField, lNameLabel, lNameField,
+                emailLabel, emailField, emptyGapPane, saveButton);
 
+        // create borderlayout
+        borderLayout = new BorderPane();
+
+        // add items to borderlayout
+        addToBorderLayout();
+
+        // create scene
+        changeDetailsScene = new Scene(borderLayout, 370, 500);
+
+        // add style
+        addStyle();
+
+        return changeDetailsScene;
+    }
+
+    private void setComp() throws IOException {
         // set labels font
         usernameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 15));
         fNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 15));
         lNameLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 15));
         emailLabel.setFont(Font.font("verdena", FontWeight.MEDIUM, 15));
 
-        // init textfields
-        usernameField = new TextField();
-        fNameField = new TextField();
-        lNameField = new TextField();
-        emailField = new TextField();
+        // set promt text to textfields
+        chosenUser = db.get_by_name(conn, CurrentUser.get_current_user());
+        usernameField.setText(fieldIsEmpty(2));
+        fNameField.setText(fieldIsEmpty(4));
+        lNameField.setText(fieldIsEmpty(5));
+        emailField.setText(fieldIsEmpty(chosenUser.size() - 1));
 
-        // init. empty panes
-        emptyPane = new Pane();
-        emptyPane2 = new Pane();
-        emptyPane3 = new Pane();
-        emptyPane4 = new Pane();
-        emptyGapPane = new Pane();
+        // set mainPane
+        mainPane.setAlignment(Pos.TOP_CENTER);
 
-        // init. button
-        saveButton = new Button("Save");
+        // set 'emptyPanes' size
+        emptyPane.setPrefSize(60, 0);
+        emptyPane2.setPrefSize(60, 0);
+        emptyPane3.setPrefSize(0, 80);
+        emptyPane4.setPrefSize(0, 40);
+        emptyGapPane.setPrefSize(0, 40);
+    }
 
-        // add action
+    private String fieldIsEmpty(int indexNum) {
+        String fieldValue = chosenUser.get(indexNum).strip();
+        if (fieldValue.equals(",")) {
+            return "";
+        }
+        return chosenUser.get(indexNum);
+    }
+
+    private void addToBorderLayout() {
+        borderLayout.setCenter(mainPane);
+        borderLayout.setRight(emptyPane);
+        borderLayout.setLeft(emptyPane2);
+        borderLayout.setBottom(emptyPane3);
+        borderLayout.setTop(emptyPane4);
+    }
+
+    private void addStyle() {
+        changeDetailsScene.getStylesheets().add(addStyleSheet());
+        usernameLabel.getStyleClass().add("usernameLabel");
+        fNameLabel.getStyleClass().add("fNameLabel");
+        lNameLabel.getStyleClass().add("lNameLabel");
+        emailLabel.getStyleClass().add("emailLabel");
+        saveButton.getStyleClass().add("saveButton");
+    }
+
+    private void addAction() {
         saveButton.setOnAction(e -> {
             newUsername = usernameField.getText();
             newFName = fNameField.getText();
             newLName = lNameField.getText();
             newEmail = emailField.getText();
             // validating email input
-            if (!(newEmail.contains("@"))) {
-                AlertBox.display("Invalid email", "Please use a valid email.", "Close");
-                return;
-            }
-            if (!(newEmail.endsWith(".com") || newEmail.endsWith(".hu") || newEmail.endsWith(".org"))) {
-                AlertBox.display("Invalid email", "Missing:\ne.g.:\t.com/.hu\nor invalid input.", "Close");
-                return;
-            }
-            if (newEmail.startsWith("@") || newEmail.startsWith(".")) {
-                AlertBox.display("Invalid email", "Please use a valid email.", "Close");
-                return;
+            if (!(newEmail.strip().equals(",") || newEmail.strip().equals(""))) {
+                if (!(newEmail.contains("@"))) {
+                    AlertBox.display("Invalid email", "Please use a valid email.", "Close");
+                    return;
+                }
+                if (!(newEmail.endsWith(".com") || newEmail.endsWith(".hu") || newEmail.endsWith(".org"))) {
+                    AlertBox.display("Invalid email", "Missing:\ne.g.:\t.com/.hu\nor invalid input.", "Close");
+                    return;
+                }
+                if (newEmail.startsWith("@") || newEmail.startsWith(".")) {
+                    AlertBox.display("Invalid email", "Please use a valid email.", "Close");
+                    return;
+                }
             }
 
             boolean usernameExists = db.username_exists(conn, newUsername);
 
-            // check if username exists and check if that username does not belong to the current user
+            // check if username exists and check if that username does not belong to the
+            // current user
             try {
                 if (usernameExists && !(newUsername.equals(CurrentUser.get_current_user()))) {
-                    AlertBox.display("Exitst", "The username: " + newUsername  + " exists.", "Close");
+                    AlertBox.display("Exitst", "The username: " + newUsername + " exists.", "Close");
                     return;
                 }
             } catch (IOException e2) {
@@ -131,7 +173,7 @@ public class ChangeDetails {
                 } catch (Exception err) {
                     System.out.println(err.getMessage());
                 }
-            } 
+            }
             if (!(newEmail.isEmpty())) {
                 try {
                     db.insert_email(conn, newEmail, CurrentUser.get_current_user());
@@ -145,50 +187,37 @@ public class ChangeDetails {
                 e1.printStackTrace();
             }
         });
+    }
 
-        // set promt text to textfields
-        chosenUser = db.get_by_name(conn, CurrentUser.get_current_user());
-        System.out.println(chosenUser.toString());
-        usernameField.setText(chosenUser.get(2));
-        fNameField.setText(chosenUser.get(4));
-        lNameField.setText(chosenUser.get(5));
-        emailField.setText(chosenUser.get(chosenUser.size() - 1));
+    private void initComp(Stage window, Scene loginScene) {
+        // assign parameters
+        this.window = window;
+        this.loginScene = loginScene;
 
-        // add itmes to gridPane
-        mainPane.getChildren().addAll(usernameLabel, usernameField, fNameLabel, fNameField, lNameLabel, lNameField, emailLabel, emailField, emptyGapPane, saveButton);
+        // init mainPane
+        mainPane = new VBox(20);
 
-        // set mainPane
-        mainPane.setAlignment(Pos.TOP_CENTER);
+        // init labels
+        usernameLabel = new Label("Username");
+        fNameLabel = new Label("First name");
+        lNameLabel = new Label("Last name");
+        emailLabel = new Label("email");
 
-        // create borderlayout
-        borderLayout = new BorderPane();
+        // init textfields
+        usernameField = new TextField();
+        fNameField = new TextField();
+        lNameField = new TextField();
+        emailField = new TextField();
 
-        // add items to borderlayout
-        borderLayout.setCenter(mainPane);
-        borderLayout.setRight(emptyPane);
-        borderLayout.setLeft(emptyPane2);
-        borderLayout.setBottom(emptyPane3);
-        borderLayout.setTop(emptyPane4);
+        // init. empty panes
+        emptyPane = new Pane();
+        emptyPane2 = new Pane();
+        emptyPane3 = new Pane();
+        emptyPane4 = new Pane();
+        emptyGapPane = new Pane();
 
-        // set 'emptyPanes' size
-        emptyPane.setPrefSize(60, 0);
-        emptyPane2.setPrefSize(60, 0);
-        emptyPane3.setPrefSize(0, 80);
-        emptyPane4.setPrefSize(0, 40);
-        emptyGapPane.setPrefSize(0, 40);
-
-        // create scene
-        changeDetailsScene = new Scene(borderLayout, 370, 500);
-
-        // add style
-        changeDetailsScene.getStylesheets().add(addStyleSheet());
-        usernameLabel.getStyleClass().add("usernameLabel");
-        fNameLabel.getStyleClass().add("fNameLabel");
-        lNameLabel.getStyleClass().add("lNameLabel");
-        emailLabel.getStyleClass().add("emailLabel");
-        saveButton.getStyleClass().add("saveButton");
-
-        return changeDetailsScene;
+        // init. button
+        saveButton = new Button("Save");
     }
 
     private static String addStyleSheet() {
@@ -199,8 +228,8 @@ public class ChangeDetails {
     }
 
     // private void openHomeScreen() throws IOException {
-    //     HomeScene2 homeScene = new HomeScene2();
-    //     window.setScene(homeScene.getHomeScene(window, loginScene));
+    // HomeScene2 homeScene = new HomeScene2();
+    // window.setScene(homeScene.getHomeScene(window, loginScene));
     // }
 
     private void openSettingsScene() throws IOException {
